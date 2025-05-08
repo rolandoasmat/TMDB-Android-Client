@@ -13,10 +13,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import com.rolando.tmdbthemoviedatabase.ui.theme.TMDBTheMovieDatabaseTheme
 import dagger.Binds
 import dagger.Module
@@ -28,35 +30,40 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 object Home
+
 @Serializable
-object MovieDetails
+data class MovieDetails(val id: Long, val name: String)
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
-
-    private val viewModel: HomeViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            val state by viewModel.state.collectAsStateWithLifecycle()
+
             TMDBTheMovieDatabaseTheme {
 
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
                     val navController = rememberNavController()
                     NavHost(navController = navController, startDestination = Home) {
                         composable<Home> {
+                            val viewModel: HomeViewModel = hiltViewModel()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
                             HomeScreen(
                                 state = state,
                                 onImageTap = { movieId ->
-                                    navController.navigate(MovieDetails)
+                                    navController.navigate(MovieDetails(id = movieId, name = "my test"))
                                 },
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }
-                        composable<MovieDetails> { MovieDetailsScreen() }
-                        // Add more destinations similarly.
+                        composable<MovieDetails> {
+                            val args = it.toRoute<MovieDetails>()
+                            val viewModel: MovieDetailsViewModel = hiltViewModel()
+                            val state by viewModel.state.collectAsStateWithLifecycle()
+                            MovieDetailsScreen(state)
+                        }
                     }
 
                 }
