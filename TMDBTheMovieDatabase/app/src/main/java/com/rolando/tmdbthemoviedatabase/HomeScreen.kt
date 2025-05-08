@@ -9,6 +9,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import coil3.compose.AsyncImage
 
 @Composable
 fun HomeScreen(
@@ -17,8 +18,12 @@ fun HomeScreen(
 ) {
 
     LazyColumn(modifier = modifier.fillMaxWidth().fillMaxHeight()) {
-        items(state.movies) {
+        items(state.movies) { item ->
             Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
+                AsyncImage(
+                    model = item.imageUrl,
+                    contentDescription = null,
+                )
 
             }
         }
