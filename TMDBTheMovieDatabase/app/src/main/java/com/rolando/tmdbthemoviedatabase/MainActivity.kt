@@ -10,8 +10,10 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.rolando.tmdbthemoviedatabase.ui.theme.TMDBTheMovieDatabaseTheme
 import dagger.Binds
 import dagger.Module
@@ -31,10 +33,11 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
+            val state by viewModel.state.collectAsStateWithLifecycle()
             TMDBTheMovieDatabaseTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
+                    HomeScreen(
+                        state = state,
                         modifier = Modifier.padding(innerPadding)
                     )
                 }
@@ -62,7 +65,7 @@ fun GreetingPreview() {
 @Module
 @InstallIn(ViewModelComponent::class)
 abstract class RepositoryModule {
-    
+
     @Binds
     abstract fun bindAnalyticsService(
         impl: TheMovieDatabaseRepositoryImpl
