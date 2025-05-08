@@ -49,6 +49,9 @@ class MainActivity : ComponentActivity() {
                         composable<Home> {
                             HomeScreen(
                                 state = state,
+                                onImageTap = { movieId ->
+                                    navController.navigate(MovieDetails)
+                                },
                                 modifier = Modifier.padding(innerPadding)
                             )
                         }

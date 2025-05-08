@@ -1,5 +1,6 @@
 package com.rolando.tmdbthemoviedatabase
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -14,6 +15,7 @@ import coil3.compose.AsyncImage
 @Composable
 fun HomeScreen(
     state: HomeScreenViewState,
+    onImageTap: (Long) -> Unit,
     modifier: Modifier,
 ) {
 
@@ -21,6 +23,9 @@ fun HomeScreen(
         items(state.movies) { item ->
             Box(modifier = Modifier.fillMaxWidth().height(200.dp)) {
                 AsyncImage(
+                    modifier = Modifier.clickable {
+                        onImageTap(item.id)
+                    },
                     model = item.imageUrl,
                     contentDescription = null,
                 )

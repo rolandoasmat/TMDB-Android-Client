@@ -40,6 +40,7 @@ class HomeViewModel @Inject constructor(
         val viewState = HomeScreenViewState(
             movies = result.data.movies.map { movie ->
                 MovieItemViewState(
+                    id = movie.id,
                     displayName = movie.title,
                     imageUrl = movie.imageUrl,
                 )
