@@ -14,15 +14,22 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.rolando.tmdbthemoviedatabase.ui.theme.TMDBTheMovieDatabaseTheme
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
 import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.components.ActivityComponent
 import dagger.hilt.android.components.ViewModelComponent
-import javax.inject.Inject
-import javax.inject.Singleton
+import kotlinx.serialization.Serializable
+
+
+@Serializable
+object Home
+@Serializable
+object MovieDetails
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -35,11 +42,20 @@ class MainActivity : ComponentActivity() {
         setContent {
             val state by viewModel.state.collectAsStateWithLifecycle()
             TMDBTheMovieDatabaseTheme {
+
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    HomeScreen(
-                        state = state,
-                        modifier = Modifier.padding(innerPadding)
-                    )
+                    val navController = rememberNavController()
+                    NavHost(navController = navController, startDestination = Home) {
+                        composable<Home> {
+                            HomeScreen(
+                                state = state,
+                                modifier = Modifier.padding(innerPadding)
+                            )
+                        }
+                        composable<MovieDetails> { MovieDetailsScreen() }
+                        // Add more destinations similarly.
+                    }
+
                 }
             }
         }
